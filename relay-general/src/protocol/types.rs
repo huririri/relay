@@ -643,6 +643,8 @@ impl std::error::Error for ParseLevelError {}
 #[cfg_attr(feature = "jsonschema", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "jsonschema", schemars(rename_all = "lowercase"))]
 pub enum Level {
+    /// 快看自定义日志
+    KKlog,
     /// Indicates very spammy debug information.
     Debug,
     /// Informational messages.
@@ -664,6 +666,7 @@ impl Level {
             30 => Level::Warning,
             40 => Level::Error,
             50 => Level::Fatal,
+            1 => Level::KKlog,
             _ => return None,
         })
     }
@@ -679,6 +682,7 @@ impl FromStr for Level {
             "warning" => Level::Warning,
             "error" => Level::Error,
             "fatal" | "critical" => Level::Fatal,
+            "kklog" => Level::KKlog,
             _ => return Err(ParseLevelError),
         })
     }
@@ -692,6 +696,7 @@ impl fmt::Display for Level {
             Level::Warning => write!(f, "warning"),
             Level::Error => write!(f, "error"),
             Level::Fatal => write!(f, "fatal"),
+            Level::KKlog => write!(f, "kklog"),
         }
     }
 }

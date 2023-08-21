@@ -136,6 +136,9 @@ pub enum FilterStatKey {
 
     /// Filtered due to the fact that it was a call to a filtered transaction
     FilteredTransactions,
+
+    /// 快看自定义log过滤器
+    KKlog,
 }
 
 // An event grouped to a removed group.
@@ -163,6 +166,7 @@ impl FilterStatKey {
             FilterStatKey::WebCrawlers => "web-crawlers",
             FilterStatKey::InvalidCsp => "invalid-csp",
             FilterStatKey::FilteredTransactions => "filtered-transaction",
+            FilterStatKey::KKlog => "kklog",
         }
     }
 }
@@ -187,6 +191,7 @@ impl<'a> TryFrom<&'a str> for FilterStatKey {
             "web-crawlers" => FilterStatKey::WebCrawlers,
             "invalid-csp" => FilterStatKey::InvalidCsp,
             "filtered-transaction" => FilterStatKey::FilteredTransactions,
+            "KKlog" => FilterStatKey::KKlog,
             other => {
                 return Err(other);
             }

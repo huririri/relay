@@ -116,7 +116,7 @@ impl Service for HttpServer {
             .addr_incoming_config(addr_config)
             .handle(handle.clone());
 
-        relay_log::info!("spawning http server");
+        relay_log::info!("spawning http server with kk-log");
         relay_log::info!("  listening on http://{}/", config.listen_addr());
         relay_statsd::metric!(counter(RelayCounters::ServerStarting) += 1);
         tokio::spawn(server.serve(app));

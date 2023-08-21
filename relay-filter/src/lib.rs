@@ -22,6 +22,7 @@ pub mod client_ips;
 pub mod csp;
 pub mod error_messages;
 pub mod legacy_browsers;
+pub mod level_kklog;
 pub mod localhost;
 pub mod transaction_name;
 pub mod web_crawlers;
@@ -58,6 +59,7 @@ pub fn should_filter(
     legacy_browsers::should_filter(event, &config.legacy_browsers)?;
     web_crawlers::should_filter(event, &config.web_crawlers)?;
     transaction_name::should_filter(event, &config.ignore_transactions)?;
+    level_kklog::should_filter(event)?;
 
     Ok(())
 }
