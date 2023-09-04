@@ -18,7 +18,6 @@ relay-general = { path = "../relay-general" }
 relay-common = { path = "../relay-common" }
 serde = { version = "1.0.114", features = ["derive"] }
 url = "2.1.1"
-kk-log = { path = "../kk-log" }
 
 [dev-dependencies]
 insta = { version = "1.19.0", features = ["json"] }
