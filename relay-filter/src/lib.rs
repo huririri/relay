@@ -20,9 +20,9 @@ use relay_general::protocol::Event;
 pub mod browser_extensions;
 pub mod client_ips;
 pub mod csp;
+pub mod custom_level_filter;
 pub mod error_messages;
 pub mod legacy_browsers;
-pub mod level_kklog;
 pub mod localhost;
 pub mod web_crawlers;
 
@@ -57,7 +57,7 @@ pub fn should_filter(
     browser_extensions::should_filter(event, &config.browser_extensions)?;
     legacy_browsers::should_filter(event, &config.legacy_browsers)?;
     web_crawlers::should_filter(event, &config.web_crawlers)?;
-    level_kklog::should_filter(event)?;
+    custom_level_filter::should_filter(event)?;
 
     Ok(())
 }

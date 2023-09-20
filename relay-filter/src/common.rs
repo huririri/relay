@@ -129,7 +129,7 @@ pub enum FilterStatKey {
     InvalidCsp,
 
     /// 快看自定义log过滤器
-    KKlog,
+    CustomFilterLevel,
 }
 
 // An event grouped to a removed group.
@@ -156,7 +156,8 @@ impl FilterStatKey {
             FilterStatKey::Localhost => "localhost",
             FilterStatKey::WebCrawlers => "web-crawlers",
             FilterStatKey::InvalidCsp => "invalid-csp",
-            FilterStatKey::KKlog => "kklog",
+            // TODO 替换为环境变量读取
+            FilterStatKey::CustomFilterLevel => "custom-filter",
         }
     }
 }
@@ -180,7 +181,8 @@ impl<'a> TryFrom<&'a str> for FilterStatKey {
             "localhost" => FilterStatKey::Localhost,
             "web-crawlers" => FilterStatKey::WebCrawlers,
             "invalid-csp" => FilterStatKey::InvalidCsp,
-            "KKlog" => FilterStatKey::KKlog,
+            // TODO 替换为环境变量读取
+            "custom-filter" => FilterStatKey::CustomFilterLevel,
             other => {
                 return Err(other);
             }

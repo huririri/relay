@@ -1,8 +1,10 @@
+//! Implements event filtering for events with a custom level.
+
 use crate::FilterStatKey;
 use relay_general::protocol::Event;
 use relay_general::protocol::Level;
 use relay_general::types::Annotated;
-/// If the event's level is `Level::KKlog`, this function will print the message from the `logentry`
+/// If the event's level is `Level::Custom`, this function will print the message from the `logentry`
 /// field and return an error to indicate that the event should be filtered. Otherwise, it will
 /// print "ok" and return `Ok(())`.
 ///
@@ -13,18 +15,17 @@ use relay_general::types::Annotated;
 /// # Returns
 ///
 /// * `Ok(())` if the event should not be filtered.
-/// * `Err(FilterStatKey::KKlog)` if the event should be filtered.
+/// * `Err(FilterStatKey::CustomFilterLevel)` if the event should be filtered.
 pub fn should_filter(event: &Event) -> Result<(), FilterStatKey> {
-    if event.level == Annotated::new(Level::KKlog) {
-        // 打印 logentry下的message
+    if event.level == Annotated::new(Level::CustomLevelForFilter) {
         if let Some(logentry) = event.logentry.value() {
             if let Some(message) = logentry.formatted.value() {
-                println!("【kk-log】-message: {:?}", message);
+                println!("【custom-log-filter】: {:?}", message);
             } else if let Some(message) = logentry.message.value() {
-                println!("【kk-log】-message: {:?}", message);
+                println!("【custom-log-filter】: {:?}", message);
             }
         }
-        return Err(FilterStatKey::KKlog);
+        return Err(FilterStatKey::CustomFilterLevel);
     }
     Ok(())
 }

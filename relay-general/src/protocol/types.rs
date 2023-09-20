@@ -654,8 +654,8 @@ pub enum Level {
     Error,
     /// Similar to error but indicates a critical event that usually causes a shutdown.
     Fatal,
-    /// 快看前端自定义日志level
-    KKlog,
+    /// 自定义过滤key
+    CustomLevelForFilter,
 }
 
 impl Level {
@@ -666,7 +666,7 @@ impl Level {
             30 => Level::Warning,
             40 => Level::Error,
             50 => Level::Fatal,
-            55 => Level::KKlog,
+            55 => Level::CustomLevelForFilter,
             _ => return None,
         })
     }
@@ -682,7 +682,7 @@ impl FromStr for Level {
             "warning" => Level::Warning,
             "error" => Level::Error,
             "fatal" | "critical" => Level::Fatal,
-            "kklog" => Level::KKlog,
+            "custom-filter" => Level::CustomLevelForFilter,
             _ => return Err(ParseLevelError),
         })
     }
@@ -696,7 +696,7 @@ impl fmt::Display for Level {
             Level::Warning => write!(f, "warning"),
             Level::Error => write!(f, "error"),
             Level::Fatal => write!(f, "fatal"),
-            Level::KKlog => write!(f, "kklog"),
+            Level::CustomLevelForFilter => write!(f, "custom-filter"),
         }
     }
 }
