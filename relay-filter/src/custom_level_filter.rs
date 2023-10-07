@@ -20,9 +20,9 @@ pub fn should_filter(event: &Event) -> Result<(), FilterStatKey> {
     if event.level == Annotated::new(Level::CustomLevelForFilter) {
         if let Some(logentry) = event.logentry.value() {
             if let Some(message) = logentry.formatted.value() {
-                println!("【custom-log-filter】: {:?}", message);
+                println!("【custom-log-filter】: {:?}", message.as_ref());
             } else if let Some(message) = logentry.message.value() {
-                println!("【custom-log-filter】: {:?}", message);
+                println!("【custom-log-filter】: {:?}", message.as_ref());
             }
         }
         return Err(FilterStatKey::CustomFilterLevel);
