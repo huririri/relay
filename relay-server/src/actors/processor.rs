@@ -57,7 +57,7 @@ use {
 
 use crate::actors::envelopes::{EnvelopeManager, SendEnvelope, SendEnvelopeError, SubmitEnvelope};
 use crate::actors::outcome::{DiscardReason, Outcome, TrackOutcome};
-use crate::actors::project::ProjectState;
+use crate::actors::project::{ProjectState, self};
 use crate::actors::project_cache::ProjectCache;
 use crate::actors::upstream::{SendRequest, UpstreamRelay};
 use crate::envelope::{AttachmentType, ContentType, Envelope, Item, ItemType};
@@ -2023,9 +2023,10 @@ impl EnvelopeProcessorService {
 
         let client_ip = state.managed_envelope.envelope().meta().client_addr();
         let filter_settings = &state.project_state.config.filter_settings;
+        let project_id = &state.project_id.value();
 
         metric!(timer(RelayTimers::EventProcessingFiltering), {
-            relay_filter::should_filter(event, client_ip, filter_settings).map_err(|err| {
+            relay_filter::should_filter(event, client_ip, filter_settings, project_id).map_err(|err| {
                 state.managed_envelope.reject(Outcome::Filtered(err));
                 ProcessingError::EventFiltered(err)
             })

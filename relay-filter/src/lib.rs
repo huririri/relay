@@ -45,6 +45,7 @@ pub fn should_filter(
     event: &Event,
     client_ip: Option<IpAddr>,
     config: &FiltersConfig,
+    project_id: &u64,
 ) -> Result<(), FilterStatKey> {
     // NB: The order of applying filters should not matter as they are additive. Still, be careful
     // when making changes to this order.
@@ -57,7 +58,7 @@ pub fn should_filter(
     browser_extensions::should_filter(event, &config.browser_extensions)?;
     legacy_browsers::should_filter(event, &config.legacy_browsers)?;
     web_crawlers::should_filter(event, &config.web_crawlers)?;
-    custom_level_filter::should_filter(event)?;
+    custom_level_filter::should_filter(event, project_id)?;
 
     Ok(())
 }
