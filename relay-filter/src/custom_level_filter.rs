@@ -45,8 +45,12 @@ pub fn print_result(event: &Event, project_id: &u64) {
 
     // 项目信息
     let mut result_url = "-";
+    let mut result_user_agent = "-";
     if let Some(request) = event.request.value() {
         result_url = request.url.as_str().unwrap_or("-");
+        if let Some(headers) = request.headers.value() {
+            result_user_agent = headers.get_header("User-Agent").unwrap_or("-")
+        }
     }
     let result_project_id :&str = &project_id.to_string();
 
@@ -55,6 +59,7 @@ pub fn print_result(event: &Event, project_id: &u64) {
     result.insert("project_id", result_project_id);
     result.insert("h5_url", result_url);
     result.insert("user_id", result_user_id);
+    result.insert("user-agent", result_user_agent);
 
     println!("【custom-log-filter】, {:?}", result);
 }
