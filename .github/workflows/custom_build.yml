@@ -1,4 +1,4 @@
-name: Binary Release Build
+name: Binary Custom Release Build
 
 on: workflow_dispatch
 
