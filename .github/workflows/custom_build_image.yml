@@ -1,0 +1,55 @@
+name: Custom_build_image
+
+on: workflow_dispatch
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        # the arm64 build takes too long, so disable for now
+        arch: [amd64]
+
+    name: Build Docker Image (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+
+    # Skip redundant checks for library releases
+    if: "!startsWith(github.ref, 'refs/heads/release-library/')"
+
+    env:
+      IMG_BASE: ghcr.io/getsentry/relay
+      IMG_DEPS: ghcr.io/getsentry/relay-deps:${{ matrix.arch }}
+      # GITHUB_SHA in pull requests points to the merge commit
+      IMG_VERSIONED: custom-build/relay:${{ github.event.pull_request.head.sha || github.sha }}
+      ARCH: ${{ matrix.arch }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          key: ${{ github.job }}-${{ matrix.arch }}
+
+      - run: docker run --rm --privileged tonistiigi/binfmt --install arm64
+        if: matrix.arch == 'arm64'
+
+      - name: Build
+        run: |
+          # Get the latest stable rust toolchain version available
+          TOOLCHAIN=$(curl -s 'https://static.rust-lang.org/dist/channel-rust-stable.toml' | awk '/\[pkg.rust\]/ {getline;print;}' | sed -r 's/^version = "([0-9.]+) .*/\1/')
+          ./scripts/build-docker-image.sh "$ARCH" "$TOOLCHAIN"
+
+      - name: Export Docker Image
+        run: docker save -o relay-docker-image.tgz $IMG_VERSIONED
+
+      - name: Upload Docker Image to Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          retention-days: 1
+          name: relay-docker-image
+          path: relay-docker-image.tgz
